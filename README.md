@@ -6,7 +6,7 @@ Simple script that gives you random moons while still fulfilling the Any% requir
 
 Clone the repository by clicking on the green `Clone or Download` button, then selecting download ZIP
 
-Unzip the download to a place of your choosing and run the file named `rum.py`
+Unzip the download to a place of your choosing and run the file named `run.py`
 
 After typing in a seed (leave blank for complete randomness), check the current directory for a file named `randomizer.txt`. Open that file to start!
 
