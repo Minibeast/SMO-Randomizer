@@ -3,6 +3,7 @@
 import json
 import datetime
 import random
+import configparser
 
 
 with open("moons.json") as moondata:
@@ -10,6 +11,14 @@ with open("moons.json") as moondata:
 
 randomizer = open("randomizer.txt", "w+")
 collectedMoons = []
+overrideArray = []
+
+
+settings = configparser.ConfigParser()
+settings.read('settings.ini')
+
+for items in settings['Overrides']:
+    overrideArray.append(items)
 
 
 def rand(min, max):
@@ -42,6 +51,14 @@ def generate(min, max, prerequisite, amount):
     i = 0
     while i < amount:
         x = randomize(min, max)
+        if str(x['id']) in overrideArray:
+            if settings['Overrides'][str(x['id'])] == 'true':
+                if x["moonPrerequisites"] is None or x["moonPrerequisites"][0]["id"] <= prerequisite:
+                    randomizer.write(x["name"] + "\n")
+                    collectedMoons.append(x["id"])
+                    i += 1
+            else:
+                collectedMoons.append(x["id"])
         if (x["moonPrerequisites"] is None or x["moonPrerequisites"][0]["id"] <= prerequisite) and (x["moonTypes"] is None or x["moonTypes"][0]["name"] != "Warp Painting") and (x["isPostGame"] is not True) and (x["requiresRevisit"] is not True) and (x["isStoryMoon"] is not True) and (x["moonTypes"] is None or (x["moonTypes"][0]["name"] != "Hint Art" and x["moonTypes"][0]["name"] != "Tourist")) and (x["id"] not in collectedMoons):
             randomizer.write(x["name"] + "\n")
             collectedMoons.append(x["id"])
