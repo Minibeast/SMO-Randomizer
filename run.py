@@ -213,7 +213,7 @@ if moonCount < 16:
 # Lost
 randomizer.write("\nLOST: \n")
 
-generate(391, 425, 0, 8)
+generate(391, 425, 0, 10)
 #
 
 # Metro
