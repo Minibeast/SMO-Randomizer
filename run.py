@@ -16,6 +16,14 @@ except FileNotFoundError:
         print('Download successful, running program')
         print()
 
+# Fixes inaccurate moon data
+moons[643]["moonPrerequisites"] = [
+        {
+          "id": 635,
+          "name": "Under the Cheese Rocks"
+        }
+      ]
+
 randomizer = open("randomizer.txt", "w+")
 collectedMoons = []
 overrideArray = []
