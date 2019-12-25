@@ -4,10 +4,17 @@ import json
 import datetime
 import random
 import configparser
+import urllib.request
 
-
-with open("moons.json") as moondata:
-    moons = json.load(moondata)["results"]
+try:
+    moons = open('moons.json')
+    moons = json.load(moons)['results']
+except FileNotFoundError:
+    print('Moon data not found locally, downloading...')
+    with urllib.request.urlopen('https://smo.kek.tech/api/v1/moons') as moondata:
+        moons = (json.loads(moondata.read()))['results']
+        print('Download successful, running program')
+        print()
 
 randomizer = open("randomizer.txt", "w+")
 collectedMoons = []

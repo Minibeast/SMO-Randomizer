@@ -12,6 +12,8 @@ After typing in a seed (leave blank for complete randomness), check the current 
 
 ### IMPORTANT
 
+If you would like to use the randomizer offline, you have to download the moon data from this [link](https://smo.kek.tech/api/v1/moons)
+
 You **must** have Python 3 (more specifically 3.8) for this to work. Python 2 or any other python version will most likely result in an error
 
 ## Rules (or lack thereof)
