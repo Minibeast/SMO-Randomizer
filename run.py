@@ -68,7 +68,7 @@ def generate(min, max, prerequisite, amount):
         x = randomize(min, max)
         if str(x['id']) in overrideArray:
             if settings['Overrides'][str(x['id'])] == 'true':
-                if x["moonPrerequisites"] is None or x["moonPrerequisites"][0]["id"] <= prerequisite:
+                if (x["moonPrerequisites"] is None or x["moonPrerequisites"][0]["id"] <= prerequisite) and (x["id"] not in collectedMoons):
                     randomizer.write(x["name"] + "\n")
                     collectedMoons.append(x["id"])
                     i += 1
