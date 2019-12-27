@@ -13,21 +13,19 @@ except FileNotFoundError:
     print('Moon data not found locally, downloading...')
     with urllib.request.urlopen('https://smo.kek.tech/api/v1/moons') as moondata:
         moons = (json.loads(moondata.read()))['results']
-        print('Download successful, running program')
-        print()
+    print('Download successful, running program')
 
 # Fixes inaccurate moon data
 moons[643]["moonPrerequisites"] = [
-        {
-          "id": 635,
-          "name": "Under the Cheese Rocks"
-        }
-      ]
+    {
+        "id": 635,
+        "name": "Under the Cheese Rocks"
+    }
+]
 
 randomizer = open("randomizer.txt", "w+")
 collectedMoons = []
 overrideArray = []
-
 
 settings = configparser.ConfigParser()
 settings.read('settings.ini')
@@ -35,11 +33,32 @@ settings.read('settings.ini')
 for items in settings['Overrides']:
     overrideArray.append(items)
 
+peaceSkips = settings['Settings']['Peace-Skips']
+
+if peaceSkips == 'true':
+    print('Skips set to true')
+    # Sand
+    moons[175]['moonTypes'] = None
+    moons[176]['moonPrerequisites'] = None
+    moons[184]['moonPrerequisites'] = None
+    moons[188]['moonPrerequisites'] = None
+    moons[220]['moonPrerequisites'] = None
+    # Snow
+    moons[176]['moonTypes'] = None
+    moons[507]['moonTypes'] = None
+    moons[508]['moonTypes'] = None
+    moons[509]['moonTypes'] = None
+    moons[510]['moonTypes'] = None
+
+    peaceSkips = True
+else:
+    peaceSkips = False
+
 
 def rand(min, max):
     return int(random.uniform(min, max) + 0.5)
 
-
+print()
 seed_option = input("Seed (leave blank for none): ")
 if not seed_option:
     seed = rand(10000, 99999)
@@ -68,13 +87,19 @@ def generate(min, max, prerequisite, amount):
         x = randomize(min, max)
         if str(x['id']) in overrideArray:
             if settings['Overrides'][str(x['id'])] == 'true':
-                if (x["moonPrerequisites"] is None or x["moonPrerequisites"][0]["id"] <= prerequisite) and (x["id"] not in collectedMoons):
+                if (x["moonPrerequisites"] is None or x["moonPrerequisites"][0]["id"] <= prerequisite) and (
+                        x["id"] not in collectedMoons):
                     randomizer.write(x["name"] + "\n")
                     collectedMoons.append(x["id"])
                     i += 1
             else:
                 collectedMoons.append(x["id"])
-        if (x["moonPrerequisites"] is None or x["moonPrerequisites"][0]["id"] <= prerequisite) and (x["moonTypes"] is None or x["moonTypes"][0]["name"] != "Warp Painting") and (x["isPostGame"] is not True) and (x["requiresRevisit"] is not True) and (x["isStoryMoon"] is not True) and (x["moonTypes"] is None or (x["moonTypes"][0]["name"] != "Hint Art" and x["moonTypes"][0]["name"] != "Tourist")) and (x["id"] not in collectedMoons):
+        if (x["moonPrerequisites"] is None or x["moonPrerequisites"][0]["id"] <= prerequisite) and (
+                x["moonTypes"] is None or x["moonTypes"][0]["name"] != "Warp Painting") and (
+                x["isPostGame"] is not True) and (x["requiresRevisit"] is not True) and (
+                x["isStoryMoon"] is not True) and (x["moonTypes"] is None or (
+                x["moonTypes"][0]["name"] != "Hint Art" and x["moonTypes"][0]["name"] != "Tourist")) and (
+                x["id"] not in collectedMoons):
             randomizer.write(x["name"] + "\n")
             collectedMoons.append(x["id"])
             i += 1
@@ -82,7 +107,8 @@ def generate(min, max, prerequisite, amount):
 
 date = datetime.datetime.now()
 
-randomizer.write("SMO Randomizer generated on " + date.strftime("%b") + " " + date.strftime("%d") + " " + date.strftime("%Y") + " at " + date.strftime("%I") + ":" + date.strftime("%M") + " " + date.strftime("%p"))
+randomizer.write("SMO Randomizer generated on " + date.strftime("%b") + " " + date.strftime("%d") + " " + date.strftime(
+    "%Y") + " at " + date.strftime("%I") + ":" + date.strftime("%M") + " " + date.strftime("%p"))
 randomizer.write("\nGenerated Seed: " + str(seed) + "\n")
 
 moonCount = 0
@@ -121,6 +147,7 @@ if moonCount < 16:
 
     generate(175, 263, 176, local)
 
+if not peaceSkips:
     if moonCount < 16:
         randomizer.write(moons[176]["name"] + "\n")
         moonCount += 1
@@ -149,6 +176,27 @@ if moonCount < 16:
 
         elif 16 > moonCount >= 14:
             generate(175, 263, 177, 16 - moonCount)
+else:
+    if moonCount < 14:
+        randomizer.write(moons[177]["name"] + " [3]\n")
+        moonCount += 3
+
+        local = rand(0, 16 - moonCount)
+        moonCount += local
+
+        generate(175, 263, 178, local)
+
+        if moonCount < 14:
+            randomizer.write(moons[178]["name"] + " [3]\n")
+            moonCount += 3
+
+            generate(175, 263, 179, 16 - moonCount)
+        elif 16 > moonCount >= 14:
+            generate(175, 263, 177, 16 - moonCount)
+
+    elif 16 > moonCount >= 14:
+        generate(175, 263, 177, 16 - moonCount)
+
 #
 
 # Lake
@@ -307,15 +355,7 @@ moonCount += local
 
 generate(507, 561, 0, local)
 
-if moonCount < 10:
-    randomizer.write(generatestory(507, 510) + "\n")
-    moonCount += 1
-
-    local = rand(0, 10 - moonCount)
-    moonCount += local
-
-    generate(507, 561, 0, local)
-
+if not peaceSkips:
     if moonCount < 10:
         randomizer.write(generatestory(507, 510) + "\n")
         moonCount += 1
@@ -343,13 +383,30 @@ if moonCount < 10:
 
                 generate(507, 561, 0, local)
 
-                if moonCount < 8:
-                    randomizer.write(moons[511]["name"] + " [3]\n")
-                    moonCount += 3
+                if moonCount < 10:
+                    randomizer.write(generatestory(507, 510) + "\n")
+                    moonCount += 1
 
-                    generate(507, 561, 512, 10 - moonCount)
-                elif 10 > moonCount >= 8:
-                    generate(507, 561, 0, 10 - moonCount)
+                    local = rand(0, 10 - moonCount)
+                    moonCount += local
+
+                    generate(507, 561, 0, local)
+
+                    if moonCount < 8:
+                        randomizer.write(moons[511]["name"] + " [3]\n")
+                        moonCount += 3
+
+                        generate(507, 561, 512, 10 - moonCount)
+                    elif 10 > moonCount >= 8:
+                        generate(507, 561, 0, 10 - moonCount)
+else:
+    if moonCount < 8:
+        randomizer.write(moons[511]["name"] + " [3]\n")
+        moonCount += 3
+
+        generate(507, 561, 512, 10 - moonCount)
+    elif 10 > moonCount >= 8:
+        generate(507, 561, 0, 10 - moonCount)
 #
 
 # Seaside
@@ -417,7 +474,6 @@ local = rand(0, 4)
 moonCount += local
 
 generate(633, 700, 0, local)
-
 
 randomizer.write(moons[633]["name"] + "\n")
 moonCount += 1
