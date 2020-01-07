@@ -12,8 +12,16 @@ try:
 except FileNotFoundError:
     print('Moon data not found locally, downloading...')
     with urllib.request.urlopen('https://smo.kek.tech/api/v1/moons') as moondata:
-        moons = (json.loads(moondata.read()))['results']
-    print('Download successful, running program')
+        moons = (json.loads(moondata.read()))
+    print('Download successful')
+
+    save = str(input('Would you like to store the moon data locally in the current directory (roughly 404 kilobytes)? '
+                     '(y/n): '))
+
+    if save.lower() == 'y':
+        with open('moons.json', 'w+') as output:
+            json.dump(moons, output)
+    moons = moons['results']
 
 randomizer = open("randomizer.txt", "w+")
 collectedMoons = []
@@ -32,7 +40,6 @@ for items in settings['Overrides']:
 peaceSkips = settings['Settings']['Peace-Skips']
 
 if peaceSkips == 'true':
-    print('Skips set to true')
     # Sand
     moons[175]['moonTypes'] = None
     moons[176]['moonPrerequisites'] = None
@@ -125,7 +132,7 @@ if len(overrideArray) > 0:
     randomizer.write("\nOVERRIDES:\n")
 
 for x in overrideArray:
-    randomizer.write(moons[int(x)]["name"] + " = " + settings["Overrides"][x] + "\n")
+    randomizer.write(moons[int(x) - 1]["name"] + " = " + settings["Overrides"][x] + "\n")
 
 moonCount = 0
 
