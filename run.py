@@ -15,17 +15,13 @@ except FileNotFoundError:
         moons = (json.loads(moondata.read()))['results']
     print('Download successful, running program')
 
-# Fixes inaccurate moon data
-moons[643]["moonPrerequisites"] = [
-    {
-        "id": 635,
-        "name": "Under the Cheese Rocks"
-    }
-]
-
 randomizer = open("randomizer.txt", "w+")
 collectedMoons = []
 overrideArray = []
+
+requiredCoins = 0
+deepWoods = 0
+outfits = 0
 
 settings = configparser.ConfigParser()
 settings.read('settings.ini')
@@ -43,8 +39,8 @@ if peaceSkips == 'true':
     moons[184]['moonPrerequisites'] = None
     moons[188]['moonPrerequisites'] = None
     moons[220]['moonPrerequisites'] = None
-    # Snow
     moons[176]['moonTypes'] = None
+    # Snow
     moons[507]['moonTypes'] = None
     moons[508]['moonTypes'] = None
     moons[509]['moonTypes'] = None
@@ -54,9 +50,24 @@ if peaceSkips == 'true':
 else:
     peaceSkips = False
 
+bowserSprinkle = settings['Settings']['Bowser-Story-End']
+
+if bowserSprinkle == 'true':
+    bowserSprinkle = True
+else:
+    bowserSprinkle = False
+
+spoilerLog = settings['Settings']['Log-Spoilers']
+
+if spoilerLog == 'true':
+    spoilerLog = True
+else:
+    spoilerLog = False
+
 
 def rand(min, max):
     return int(random.uniform(min, max) + 0.5)
+
 
 print()
 seed_option = input("Seed (leave blank for none): ")
@@ -110,6 +121,11 @@ date = datetime.datetime.now()
 randomizer.write("SMO Randomizer generated on " + date.strftime("%b") + " " + date.strftime("%d") + " " + date.strftime(
     "%Y") + " at " + date.strftime("%I") + ":" + date.strftime("%M") + " " + date.strftime("%p"))
 randomizer.write("\nGenerated Seed: " + str(seed) + "\n")
+if len(overrideArray) > 0:
+    randomizer.write("\nOVERRIDES:\n")
+
+for x in overrideArray:
+    randomizer.write(moons[int(x)]["name"] + " = " + settings["Overrides"][x] + "\n")
 
 moonCount = 0
 
@@ -532,7 +548,29 @@ randomizer.write(moons[712]["name"] + "\n")
 randomizer.write(moons[713]["name"] + "\n")
 randomizer.write(moons[714]["name"] + " [3]\n")
 
-generate(711, 772, 715, 8 - moonCount)
+sprinkleID = 715
+
+if bowserSprinkle:
+    sprinkleID = 714
+
+generate(711, 772, sprinkleID, 8 - moonCount)
 #
+
+# Spoilers D:
+if spoilerLog:
+    for x in collectedMoons:
+        if x == 339:
+            requiredCoins += 500
+        if x in range(334, 342):
+            deepWoods += 1
+        if moons[x - 1]['moonTypes'] is not None:
+            for a in moons[x - 1]['moonTypes']:
+                if a['name'] == 'Shopping':
+                    requiredCoins += 100
+                elif a['name'] == 'Costume':
+                    outfits += 1
+    print('\nSpoiler Log: \nRequired Coins: ' + str(requiredCoins) + " \nDeep Woods Moons: " + str(
+        deepWoods) + "\nOutfit Moons: " + str(outfits))
+    input('Press enter to continue... ')
 
 randomizer.close()
