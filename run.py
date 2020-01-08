@@ -6,6 +6,8 @@ import random
 import configparser
 import urllib.request
 
+version = "1.1.2"
+
 try:
     moons = open('moons.json')
     moons = json.load(moons)['results']
@@ -37,9 +39,9 @@ settings.read('settings.ini')
 for items in settings['Overrides']:
     overrideArray.append(items)
 
-peaceSkips = settings['Settings']['Peace-Skips']
+peaceSkips = settings.getboolean('Settings', 'Peace-Skips')
 
-if peaceSkips == 'true':
+if peaceSkips:
     # Sand
     moons[175]['moonTypes'] = None
     moons[176]['moonPrerequisites'] = None
@@ -53,33 +55,20 @@ if peaceSkips == 'true':
     moons[509]['moonTypes'] = None
     moons[510]['moonTypes'] = None
 
-    peaceSkips = True
-else:
-    peaceSkips = False
 
-bowserSprinkle = settings['Settings']['Bowser-Story-End']
+bowserSprinkle = settings.getboolean('Settings', 'Bowser-Story-End')
 
-if bowserSprinkle == 'true':
-    bowserSprinkle = True
-else:
-    bowserSprinkle = False
-
-spoilerLog = settings['Settings']['Log-Spoilers']
-
-if spoilerLog == 'true':
-    spoilerLog = True
-else:
-    spoilerLog = False
+spoilerLog = settings.getboolean('Settings', 'Log-Spoilers')
 
 
 def rand(min, max):
-    return int(random.uniform(min, max) + 0.5)
+    return random.randint(min, max)
 
 
 print()
 seed_option = input("Seed (leave blank for none): ")
 if not seed_option:
-    seed = rand(10000, 99999)
+    seed = rand(0, 99999)
     random.seed(seed)
 else:
     seed = seed_option
@@ -104,7 +93,7 @@ def generate(min, max, prerequisite, amount):
     while i < amount:
         x = randomize(min, max)
         if str(x['id']) in overrideArray:
-            if settings['Overrides'][str(x['id'])] == 'true':
+            if settings.getboolean('Overrides', str(x['id'])):
                 if (x["moonPrerequisites"] is None or x["moonPrerequisites"][0]["id"] <= prerequisite) and (
                         x["id"] not in collectedMoons):
                     randomizer.write(x["name"] + "\n")
@@ -125,8 +114,7 @@ def generate(min, max, prerequisite, amount):
 
 date = datetime.datetime.now()
 
-randomizer.write("SMO Randomizer generated on " + date.strftime("%b") + " " + date.strftime("%d") + " " + date.strftime(
-    "%Y") + " at " + date.strftime("%I") + ":" + date.strftime("%M") + " " + date.strftime("%p"))
+randomizer.write("SMO Randomizer generated on " + date.strftime("%b") + " " + date.strftime("%d") + " " + date.strftime("%Y") + " at " + date.strftime("%I") + ":" + date.strftime("%M") + " " + date.strftime("%p") + " (Version: " + version + ")")
 randomizer.write("\nGenerated Seed: " + str(seed) + "\n")
 if len(overrideArray) > 0:
     randomizer.write("\nOVERRIDES:\n")
@@ -563,6 +551,8 @@ if bowserSprinkle:
 generate(711, 772, sprinkleID, 8 - moonCount)
 #
 
+randomizer.close()
+
 # Spoilers D:
 if spoilerLog:
     for x in collectedMoons:
@@ -579,5 +569,3 @@ if spoilerLog:
     print('\nSpoiler Log: \nRequired Coins: ' + str(requiredCoins) + " \nDeep Woods Moons: " + str(
         deepWoods) + "\nOutfit Moons: " + str(outfits))
     input('Press enter to continue... ')
-
-randomizer.close()
