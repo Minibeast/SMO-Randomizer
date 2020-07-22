@@ -1,4 +1,8 @@
 /venv
 /.idea
+/__pycache__
+/build
+/dist
+run.spec
 randomizer.txt
 moons.json

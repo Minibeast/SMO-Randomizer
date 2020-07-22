@@ -6,7 +6,7 @@ import random
 import configparser
 import urllib.request
 
-version = "1.1.2"
+version = "1.1.3"
 
 try:
     moons = open('moons.json')
@@ -57,8 +57,6 @@ if peaceSkips:
 
 
 bowserSprinkle = settings.getboolean('Settings', 'Bowser-Story-End')
-
-spoilerLog = settings.getboolean('Settings', 'Log-Spoilers')
 
 
 def rand(min, max):
@@ -549,23 +547,5 @@ if bowserSprinkle:
     sprinkleID = 714
 
 generate(711, 772, sprinkleID, 8 - moonCount)
-#
 
 randomizer.close()
-
-# Spoilers D:
-if spoilerLog:
-    for x in collectedMoons:
-        if x == 339:
-            requiredCoins += 500
-        if x in range(334, 342):
-            deepWoods += 1
-        if moons[x - 1]['moonTypes'] is not None:
-            for a in moons[x - 1]['moonTypes']:
-                if a['name'] == 'Shopping':
-                    requiredCoins += 100
-                elif a['name'] == 'Costume':
-                    outfits += 1
-    print('\nSpoiler Log: \nRequired Coins: ' + str(requiredCoins) + " \nDeep Woods Moons: " + str(
-        deepWoods) + "\nOutfit Moons: " + str(outfits))
-    input('Press enter to continue... ')

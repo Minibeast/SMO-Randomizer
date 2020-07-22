@@ -4,17 +4,13 @@ Simple script that gives you random moons while still fulfilling the Any% requir
 
 ## Setup
 
-Clone the repository by clicking on the green `Clone or Download` button, then selecting download ZIP
+### Stable (v 1.1.3)
+Click on the most recent release in the `Releases` section on the right. Then download application.zip
 
-Unzip the download to a place of your choosing and run the file named `run.py`
+Unzip and run the file `randomizer.exe`
 
-After typing in a seed (leave blank for complete randomness), check the current directory for a file named `randomizer.txt`. Open that file to start!
-
-### IMPORTANT
-
-If you would like to use the randomizer offline, you have to download the moon data from this [link](https://smo.kek.tech/api/v1/moons)
-
-Python 3 **must** be installed to run the program.
+### Development (v 1.1.3)
+If you would like to get the most recent version, clone the repository and run the file `run.py`
 
 ## Credits
 
