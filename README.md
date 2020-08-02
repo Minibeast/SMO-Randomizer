@@ -4,12 +4,12 @@ Simple script that gives you random moons while still fulfilling the Any% requir
 
 ## Setup
 
-### Stable (v 1.1.3)
+### Stable
 Click on the most recent release in the `Releases` section on the right. Then download application.zip
 
 Unzip and run the file `randomizer.exe`
 
-### Development (v 1.1.3)
+### Development
 If you would like to get the most recent version, clone the repository and run the file `run.py`
 
 ## Credits
