@@ -10,10 +10,12 @@ Click on the most recent release in the `Releases` section on the right. Then do
 Unzip and run the file `randomizer.exe`
 
 ### Development
-If you would like to get the most recent version, clone the repository and run the file `run.py`
+If you would like to get the most recent version, clone the repository and run the file `run.py` with python3
 
 ## Credits
 
-Massive shoutouts to [candle](https://github.com/candleeater) not only for the moon data but also for making his own randomizer. He utilizes different logic than mine so I believe its worth checking out ([Link](https://smo.kek.tech/api/v1/index#!/rando))
+[Candle](https://github.com/candleeater) for the moon data used to calculate logic.
 
-Shoutouts to the Odyssey Speedrunning community as well ([Discord](https://discordapp.com/invite/smospeedruns))
+[AzHarcos](https://twitter.com/AzHarcos) for help with stylizing the HTML page.
+
+Odyssey Speedrunning community ([Discord](https://discordapp.com/invite/smospeedruns))

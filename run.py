@@ -7,7 +7,7 @@ import configparser
 import urllib.request
 import sys
 
-version = "1.1.4.1"
+version = "1.1.5"
 
 cmd_run = len(sys.argv) > 1 and str(sys.argv[1]) == "console"
 
@@ -91,7 +91,11 @@ increment = 0
 def checkbox_generate(text):
     global increment
     increment += 1
-    return '<div class="checkbox"><input type="checkbox" id="' + str(increment) + '"/>\n<label class="strikethrough" for="' + str(increment) + '">' + str(text) + '</label>\n</div>\n'
+    return '<li class="list-group-item">\n<div class="checkbox"><input type="checkbox" id="' + str(increment) + '"/>\n<label class="strikethrough" for="' + str(increment) + '">' + str(text) + '</label>\n</div>\n</li>\n'
+
+
+def header_generate(text):
+    return '<h3><div class="card">\n<div class="card-header">\n' + str(text) + '\n</div>\n<ul class="list-group list-group-flush">\n'
 
 
 def randomize(min, max):
@@ -152,12 +156,41 @@ date = datetime.datetime.now()
 randomizer.write("SMO Randomizer generated on " + date.strftime("%b") + " " + date.strftime("%d") + " " + date.strftime("%Y") + " at " + date.strftime("%I") + ":" + date.strftime("%M") + " " + date.strftime("%p") + " (Version: " + version + ")")
 randomizer.write("\nGenerated Seed: " + str(seed) + "\n")
 
-htmlrandomizer.write("<!DOCTYPE html>\n<head>\n<title>Seed: " + str(seed) + "</title>\n<style>\nlabel.strikethrough{\n\tline-height: 1.8;\n}\ninput[type=checkbox]:checked + label.strikethrough{\n\ttext-decoration: line-through;\n}\n</style>\n</head><body>\n")
-htmlrandomizer.write("<h3>Generated on: " + date.strftime("%b") + " " + date.strftime("%d") + " " + date.strftime("%Y") + " at " + date.strftime("%I") + ":" + date.strftime("%M") + " " + date.strftime("%p") + " (Version: " + version + ")")
+header = '''<!DOCTYPE html>
+<head>
+    <title>Seed: {}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <style>
+        label.strikethrough {{
+            line-height: 0.3;
+            font-size: 15px;
+        }}
+        input[type=checkbox]:checked + label.strikethrough {{
+            text-decoration: line-through;
+        }}
+        body {{
+            width:50vw;
+            margin:auto;
+        }}
+        .card{{
+            margin-top:20px;
+        }}
+        .card-header{{
+            font-size: 20px;
+        }}
+        li:hover {{
+            background-color: #d3d3d3;
+        }}
+        
+    </style>
+</head>
+<body>'''
+htmlrandomizer.write(header.format(str(seed)))
+htmlrandomizer.write("\n<h3>Generated on " + date.strftime("%b") + " " + date.strftime("%d") + " " + date.strftime("%Y") + " at " + date.strftime("%I") + ":" + date.strftime("%M") + " " + date.strftime("%p") + "</h3>\n<h4>Version: " + version + "</h4>\n")
 
 if len(overrideArray) > 0:
     randomizer.write("\nOVERRIDES:\n")
-    htmlrandomizer.write("\n<h2>Overrides</h2>\n<ul>\n")
+    htmlrandomizer.write("\n<h3>Overrides</h3>\n<ul>\n")
 
 for x in overrideArray:
     randomizer.write(moons[int(x) - 1]["name"] + " = " + settings["Overrides"][x] + "\n")
@@ -170,7 +203,7 @@ moonCount = 0
 
 # Cascade
 randomizer.write("\nCASCADE:\n")
-htmlrandomizer.write("\n<h2>Cascade</h2>\n")
+htmlrandomizer.write(header_generate("Cascade"))
 
 randomizer.write(moons[135]["name"] + "\n")
 htmlrandomizer.write(checkbox_generate(moons[135]["name"]))
@@ -190,7 +223,8 @@ generate(135, 174, 137, 1 - moonCount)
 moonCount = 0
 
 randomizer.write("\nSAND: \n")
-htmlrandomizer.write("\n<h2>Sand</h2>\n")
+htmlrandomizer.write("</ul>\n</div>\n")
+htmlrandomizer.write(header_generate("Sand"))
 
 local = rand(0, 16)
 moonCount += local
@@ -268,7 +302,8 @@ else:
 moonCount = 0
 
 randomizer.write("\nLAKE: \n")
-htmlrandomizer.write("\n<h2>Lake</h2>\n")
+htmlrandomizer.write("</ul>\n</div>\n")
+htmlrandomizer.write(header_generate("Lake"))
 
 local = rand(0, 8)
 moonCount += local
@@ -289,7 +324,8 @@ elif 8 > moonCount >= 6:
 moonCount = 0
 
 randomizer.write("\nWOODED: \n")
-htmlrandomizer.write("\n<h2>Wooded</h2>\n")
+htmlrandomizer.write("</ul>\n</div>\n")
+htmlrandomizer.write(header_generate("Wooded"))
 
 local = rand(0, 16)
 moonCount += local
@@ -340,7 +376,8 @@ if moonCount < 16:
 
 # Lost
 randomizer.write("\nLOST: \n")
-htmlrandomizer.write("\n<h2>Lost</h2>\n")
+htmlrandomizer.write("</ul>\n</div>\n")
+htmlrandomizer.write(header_generate("Lost"))
 
 generate(391, 425, 0, 10)
 #
@@ -349,7 +386,8 @@ generate(391, 425, 0, 10)
 moonCount = 0
 
 randomizer.write("\nMETRO: \n")
-htmlrandomizer.write("\n<h2>Metro</h2>\n")
+htmlrandomizer.write("</ul>\n</div>\n")
+htmlrandomizer.write(header_generate("Metro"))
 
 local = rand(0, 5)
 moonCount += local
@@ -434,7 +472,8 @@ if moonCount < 20:
 moonCount = 0
 
 randomizer.write("\nSNOW: \n")
-htmlrandomizer.write("\n<h2>Snow</h2>\n")
+htmlrandomizer.write("</ul>\n</div>\n")
+htmlrandomizer.write(header_generate("Snow"))
 
 local = rand(0, 10)
 moonCount += local
@@ -509,7 +548,8 @@ else:
 moonCount = 0
 
 randomizer.write("\nSEASIDE: \n")
-htmlrandomizer.write("\n<h2>Seaside</h2>\n")
+htmlrandomizer.write("</ul>\n</div>\n")
+htmlrandomizer.write(header_generate("Seaside"))
 
 local = rand(0, 10)
 moonCount += local
@@ -575,7 +615,8 @@ if moonCount < 10:
 moonCount = 0
 
 randomizer.write("\nLUNCHEON: \n")
-htmlrandomizer.write("\n<h2>Luncheon</h2>\n")
+htmlrandomizer.write("</ul>\n</div>\n")
+htmlrandomizer.write(header_generate("Luncheon"))
 
 local = rand(0, 4)
 moonCount += local
@@ -638,7 +679,8 @@ if moonCount < 18:
 moonCount = 6
 
 randomizer.write("\nBOWSERS: \n")
-htmlrandomizer.write("\n<h2>Bowsers</h2>\n")
+htmlrandomizer.write("</ul>\n</div>\n")
+htmlrandomizer.write(header_generate("Bowsers"))
 
 randomizer.write(moons[711]["name"] + "\n")
 htmlrandomizer.write(checkbox_generate(moons[711]["name"]))
