@@ -5,8 +5,11 @@ import datetime
 import random
 import configparser
 import urllib.request
+import sys
 
-version = "1.1.4"
+version = "1.1.4.1"
+
+cmd_run = len(sys.argv) > 1 and str(sys.argv[1]) == "console"
 
 try:
     moons = open('moons.json')
@@ -17,8 +20,11 @@ except FileNotFoundError:
         moons = (json.loads(moondata.read()))
     print('Download successful')
 
-    save = str(input('Would you like to store the moon data locally in the current directory (roughly 404 kilobytes)? '
-                     '(y/n): '))
+    if cmd_run:
+        save = 'y'
+    else:
+        save = str(input('Would you like to store the moon data locally in the current directory (roughly 404 '
+                         'kilobytes)? (y/n): '))
 
     if save.lower() == 'y':
         with open('moons.json', 'w+') as output:
@@ -64,7 +70,14 @@ def rand(min, max):
 
 
 print()
-seed_option = input("Seed (leave blank for none): ")
+
+if cmd_run:
+    if len(sys.argv) > 2:
+        seed_option = sys.argv[2]
+    else:
+        seed_option = None
+else:
+    seed_option = input("Seed (leave blank for none): ")
 if not seed_option:
     seed = rand(0, 99999)
     random.seed(seed)
