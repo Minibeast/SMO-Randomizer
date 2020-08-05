@@ -91,7 +91,7 @@ increment = 0
 def checkbox_generate(text):
     global increment
     increment += 1
-    return '<li class="list-group-item">\n<div class="checkbox"><input type="checkbox" id="' + str(increment) + '"/>\n<label class="strikethrough" for="' + str(increment) + '">' + str(text) + '</label>\n</div>\n</li>\n'
+    return '<li class="list-group-item" onclick="clicked(' + str(increment) + ')">\n<div class="checkbox"><input type="checkbox" id="' + str(increment) + '" onclick="clicked(' + str(increment) + ')"/>\n<label class="strikethrough">' + str(text) + '</label>\n</div>\n</li>\n'
 
 
 def header_generate(text):
@@ -699,5 +699,5 @@ if bowserSprinkle:
 generate(711, 772, sprinkleID, 8 - moonCount)
 
 randomizer.close()
-htmlrandomizer.write("</body>")
+htmlrandomizer.write("<script>\nfunction clicked(id) {\ndocument.getElementById(id).checked = !document.getElementById(id).checked;\n}\n</script>\n</body>")
 htmlrandomizer.close()
