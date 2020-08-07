@@ -6,8 +6,9 @@ import random
 import configparser
 import urllib.request
 import sys
+import pyperclip
 
-version = "1.1.6"
+version = "1.1.7"
 
 cmd_run = len(sys.argv) > 1 and str(sys.argv[1]) == "console"
 
@@ -31,8 +32,6 @@ except FileNotFoundError:
             json.dump(moons, output)
     moons = moons['results']
 
-randomizer = open("randomizer.txt", "w+")
-htmlrandomizer = open("randomizer.html", "w+")
 collectedMoons = []
 overrideArray = []
 
@@ -75,17 +74,26 @@ if cmd_run:
     if len(sys.argv) > 2:
         seed_option = sys.argv[2]
     else:
-        seed_option = None
+        print("No seed given, exiting")
+        sys.exit()
 else:
     seed_option = input("Seed (leave blank for none): ")
 if not seed_option:
-    seed = rand(0, 99999)
-    random.seed(seed)
+    seed = random.randrange(999999)
+    print("\nNOTE: Due to a bug with Python random number generation, the application must be relaunched to use the "
+          "generated seed properly.\nApologies for the inconvenience.")
+    pyperclip.copy(seed)
+    print("\nYour seed is {}. It has been copied to your clipboard.\n".format(str(seed)))
+    input("Press enter to continue... ")
+    sys.exit()
 else:
     seed = seed_option
     random.seed(seed)
 
 increment = 0
+
+randomizer = open("randomizer.txt", "w+")
+htmlrandomizer = open("randomizer.html", "w+")
 
 
 def checkbox_generate(text):
