@@ -7,7 +7,7 @@ import configparser
 import urllib.request
 import sys
 
-version = "1.1.5"
+version = "1.1.6"
 
 cmd_run = len(sys.argv) > 1 and str(sys.argv[1]) == "console"
 
@@ -605,9 +605,9 @@ if moonCount < 10:
                     htmlrandomizer.write(checkbox_generate(moons[566]["name"] + " [3]"))
                     moonCount += 3
 
-                    generate(562, 632, 567, local)
+                    generate(562, 632, 567, 10 - moonCount)
                 elif 10 > moonCount >= 8:
-                    generate(562, 632, 0, local)
+                    generate(562, 632, 0, 10 - moonCount)
 
 #
 
