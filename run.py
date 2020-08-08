@@ -8,7 +8,7 @@ import urllib.request
 import sys
 import pyperclip
 
-version = "1.1.7"
+version = "1.1.8"
 
 cmd_run = len(sys.argv) > 1 and str(sys.argv[1]) == "console"
 
@@ -62,6 +62,7 @@ if peaceSkips:
 
 
 bowserSprinkle = settings.getboolean('Settings', 'Bowser-Story-End')
+html_old = settings.getboolean('Settings', 'Old-CSS')
 
 
 def rand(min, max):
@@ -99,11 +100,17 @@ htmlrandomizer = open("randomizer.html", "w+")
 def checkbox_generate(text):
     global increment
     increment += 1
-    return '<li class="list-group-item" onclick="clicked(' + str(increment) + ')">\n<div class="checkbox"><input type="checkbox" id="' + str(increment) + '" onclick="clicked(' + str(increment) + ')"/>\n<label class="strikethrough">' + str(text) + '</label>\n</div>\n</li>\n'
+    if html_old:
+        return '<div class="checkbox"><input type="checkbox" id="' + str(increment) + '"/>\n<label class="strikethrough" for="' + str(increment) + '">' + str(text) + '</label>\n</div>\n'
+    else:
+        return '<li class="list-group-item" onclick="clicked(' + str(increment) + ')">\n<div class="checkbox"><input type="checkbox" id="' + str(increment) + '" onclick="clicked(' + str(increment) + ')"/>\n<label class="strikethrough">' + str(text) + '</label>\n</div>\n</li>\n'
 
 
 def header_generate(text):
-    return '<h3><div class="card">\n<div class="card-header">\n' + str(text) + '\n</div>\n<ul class="list-group list-group-flush">\n'
+    if html_old:
+        return "\n<h2>" + str(text) + "</h2>\n"
+    else:
+        return '<h3><div class="card">\n<div class="card-header">\n' + str(text) + '\n</div>\n<ul class="list-group list-group-flush">\n'
 
 
 def randomize(min, max):
@@ -193,8 +200,27 @@ header = '''<!DOCTYPE html>
     </style>
 </head>
 <body>'''
+
+if html_old:
+    header = '''<!DOCTYPE html>
+<head>
+    <title>Seed: {}</title>
+    <style>
+        label.strikethrough{{
+            line-height: 1.8;
+        }}
+        input[type=checkbox]:checked + label.strikethrough{{
+            text-decoration: line-through;
+        }}
+    </style>
+</head>
+<body>'''
+
 htmlrandomizer.write(header.format(str(seed)))
-htmlrandomizer.write("\n<h3>Generated on " + date.strftime("%b") + " " + date.strftime("%d") + " " + date.strftime("%Y") + " at " + date.strftime("%I") + ":" + date.strftime("%M") + " " + date.strftime("%p") + "</h3>\n<h4>Version: " + version + "</h4>\n")
+if html_old:
+    htmlrandomizer.write("<h3>Generated on: " + date.strftime("%b") + " " + date.strftime("%d") + " " + date.strftime("%Y") + " at " + date.strftime("%I") + ":" + date.strftime("%M") + " " + date.strftime("%p") + " (Version: " + version + ")")
+else:
+    htmlrandomizer.write("\n<h3>Generated on " + date.strftime("%b") + " " + date.strftime("%d") + " " + date.strftime("%Y") + " at " + date.strftime("%I") + ":" + date.strftime("%M") + " " + date.strftime("%p") + "</h3>\n<h4>Version: " + version + "</h4>\n")
 
 if len(overrideArray) > 0:
     randomizer.write("\nOVERRIDES:\n")
@@ -231,7 +257,8 @@ generate(135, 174, 137, 1 - moonCount)
 moonCount = 0
 
 randomizer.write("\nSAND: \n")
-htmlrandomizer.write("</ul>\n</div>\n")
+if not html_old:
+    htmlrandomizer.write("</ul>\n</div>\n")
 htmlrandomizer.write(header_generate("Sand"))
 
 local = rand(0, 16)
@@ -310,7 +337,8 @@ else:
 moonCount = 0
 
 randomizer.write("\nLAKE: \n")
-htmlrandomizer.write("</ul>\n</div>\n")
+if not html_old:
+    htmlrandomizer.write("</ul>\n</div>\n")
 htmlrandomizer.write(header_generate("Lake"))
 
 local = rand(0, 8)
@@ -332,7 +360,8 @@ elif 8 > moonCount >= 6:
 moonCount = 0
 
 randomizer.write("\nWOODED: \n")
-htmlrandomizer.write("</ul>\n</div>\n")
+if not html_old:
+    htmlrandomizer.write("</ul>\n</div>\n")
 htmlrandomizer.write(header_generate("Wooded"))
 
 local = rand(0, 16)
@@ -384,7 +413,8 @@ if moonCount < 16:
 
 # Lost
 randomizer.write("\nLOST: \n")
-htmlrandomizer.write("</ul>\n</div>\n")
+if not html_old:
+    htmlrandomizer.write("</ul>\n</div>\n")
 htmlrandomizer.write(header_generate("Lost"))
 
 generate(391, 425, 0, 10)
@@ -394,7 +424,8 @@ generate(391, 425, 0, 10)
 moonCount = 0
 
 randomizer.write("\nMETRO: \n")
-htmlrandomizer.write("</ul>\n</div>\n")
+if not html_old:
+    htmlrandomizer.write("</ul>\n</div>\n")
 htmlrandomizer.write(header_generate("Metro"))
 
 local = rand(0, 5)
@@ -480,7 +511,8 @@ if moonCount < 20:
 moonCount = 0
 
 randomizer.write("\nSNOW: \n")
-htmlrandomizer.write("</ul>\n</div>\n")
+if not html_old:
+    htmlrandomizer.write("</ul>\n</div>\n")
 htmlrandomizer.write(header_generate("Snow"))
 
 local = rand(0, 10)
@@ -556,7 +588,8 @@ else:
 moonCount = 0
 
 randomizer.write("\nSEASIDE: \n")
-htmlrandomizer.write("</ul>\n</div>\n")
+if not html_old:
+    htmlrandomizer.write("</ul>\n</div>\n")
 htmlrandomizer.write(header_generate("Seaside"))
 
 local = rand(0, 10)
@@ -623,7 +656,8 @@ if moonCount < 10:
 moonCount = 0
 
 randomizer.write("\nLUNCHEON: \n")
-htmlrandomizer.write("</ul>\n</div>\n")
+if not html_old:
+    htmlrandomizer.write("</ul>\n</div>\n")
 htmlrandomizer.write(header_generate("Luncheon"))
 
 local = rand(0, 4)
@@ -687,7 +721,8 @@ if moonCount < 18:
 moonCount = 6
 
 randomizer.write("\nBOWSERS: \n")
-htmlrandomizer.write("</ul>\n</div>\n")
+if not html_old:
+    htmlrandomizer.write("</ul>\n</div>\n")
 htmlrandomizer.write(header_generate("Bowsers"))
 
 randomizer.write(moons[711]["name"] + "\n")
@@ -707,5 +742,7 @@ if bowserSprinkle:
 generate(711, 772, sprinkleID, 8 - moonCount)
 
 randomizer.close()
-htmlrandomizer.write("<script>\nfunction clicked(id) {\ndocument.getElementById(id).checked = !document.getElementById(id).checked;\n}\n</script>\n</body>")
+if not html_old:
+    htmlrandomizer.write("<script>\nfunction clicked(id) {\ndocument.getElementById(id).checked = !document.getElementById(id).checked;\n}\n</script>\n")
+htmlrandomizer.write("</body>")
 htmlrandomizer.close()
