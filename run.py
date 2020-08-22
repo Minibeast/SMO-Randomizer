@@ -8,7 +8,7 @@ import urllib.request
 import sys
 import pyperclip
 
-version = "1.1.8"
+version = "1.1.9"
 
 cmd_run = len(sys.argv) > 1 and str(sys.argv[1]) == "console"
 
@@ -37,6 +37,7 @@ overrideArray = []
 
 coin_moons = [217, 283, 329, 412, 453, 528, 598, 658, 740]
 purple_moons = [228, 285, 342, 465, 466, 536, 537, 604, 660, 661, 742, 743]
+deep_woods = list(range(334, 343))
 
 settings = configparser.ConfigParser()
 settings.read('settings.ini')
@@ -136,11 +137,13 @@ def generate(min, max, prerequisite, amount):
                         x["id"] not in collectedMoons):
                     trait = ""
                     if x["id"] in coin_moons:
-                        trait = " [100 Coins]"
-                    elif x["id"] in purple_moons:
-                        trait = " [Outfit Moon]"
-                    elif x["id"] == 339:
-                        trait = " [500 Coins]"
+                        trait += " [100 Coins] "
+                    if x["id"] in deep_woods:
+                        trait += " [Deep Woods] "
+                    if x["id"] in purple_moons:
+                        trait += " [Outfit Moon] "
+                    if x["id"] == 339:
+                        trait += " [500 Coins] "
                     randomizer.write(x["name"] + trait + "\n")
                     htmlrandomizer.write(checkbox_generate(x["name"] + "<b>" + trait + "</b>"))
                     collectedMoons.append(x["id"])
@@ -155,11 +158,13 @@ def generate(min, max, prerequisite, amount):
                 x["id"] not in collectedMoons):
             trait = ""
             if x["id"] in coin_moons:
-                trait = " [100 Coins]"
-            elif x["id"] in purple_moons:
-                trait = " [Outfit Moon]"
-            elif x["id"] == 339:
-                trait = " [500 Coins]"
+                trait += " [100 Coins] "
+            if x["id"] in deep_woods:
+                trait += " [Deep Woods] "
+            if x["id"] in purple_moons:
+                trait += " [Outfit Moon] "
+            if x["id"] == 339:
+                trait += " [500 Coins] "
             randomizer.write(x["name"] + trait + "\n")
             htmlrandomizer.write(checkbox_generate(x["name"] + "<b>" + trait + "</b>"))
             collectedMoons.append(x["id"])
@@ -233,8 +238,6 @@ for x in overrideArray:
 if len(overrideArray) > 0:
     htmlrandomizer.write("</ul>")
 
-moonCount = 0
-
 # Cascade
 randomizer.write("\nCASCADE:\n")
 htmlrandomizer.write(header_generate("Cascade"))
@@ -242,15 +245,10 @@ htmlrandomizer.write(header_generate("Cascade"))
 randomizer.write(moons[135]["name"] + "\n")
 htmlrandomizer.write(checkbox_generate(moons[135]["name"]))
 
-local = rand(moonCount, 1)
-moonCount += local
-
-generate(135, 174, 136, local)
-
 randomizer.write(moons[136]["name"] + " [3]\n")
 htmlrandomizer.write(checkbox_generate(moons[136]["name"] + " [3]"))
 
-generate(135, 174, 137, 1 - moonCount)
+generate(135, 174, 137, 1)
 #
 
 # Sand
@@ -427,11 +425,6 @@ randomizer.write("\nMETRO: \n")
 if not html_old:
     htmlrandomizer.write("</ul>\n</div>\n")
 htmlrandomizer.write(header_generate("Metro"))
-
-local = rand(0, 5)
-moonCount += local
-
-generate(426, 506, 0, local)
 
 randomizer.write(moons[426]["name"] + " [3]\n")
 htmlrandomizer.write(checkbox_generate(moons[426]["name"] + " [3]"))
@@ -659,11 +652,6 @@ randomizer.write("\nLUNCHEON: \n")
 if not html_old:
     htmlrandomizer.write("</ul>\n</div>\n")
 htmlrandomizer.write(header_generate("Luncheon"))
-
-local = rand(0, 4)
-moonCount += local
-
-generate(633, 700, 0, local)
 
 randomizer.write(moons[633]["name"] + "\n")
 htmlrandomizer.write(checkbox_generate(moons[633]["name"]))
